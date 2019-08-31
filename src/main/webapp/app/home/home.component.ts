@@ -16,6 +16,17 @@ export class HomeComponent implements OnInit {
     account: Account;
     modalRef: NgbModalRef;
     classeNameNeedToReg: string;
+    classeNametoAdd: string;
+    classeLocationtoAdd: string;
+    classeContenttoAdd: string;
+    classeTeacherIdtoAdd: number;
+    classeNametoDelete: string;
+    classeNametoUpdate: string;
+    classeLocationtoUpdate: string;
+    classeContenttoUpdate: string;
+    classeTeacherIdtoUpdate: number;
+    courses: CourseDto[] = [];
+    coursesWithTN: CourseWithTNDto[] = [];
 
     constructor(
         private principal: Principal,
@@ -23,10 +34,6 @@ export class HomeComponent implements OnInit {
         private eventManager: JhiEventManager,
         private courseService: CourseService
     ) {}
-
-    courses: CourseDto[] = [];
-
-    coursesWithTN: CourseWithTNDto[] = [];
 
     ngOnInit() {
         this.principal.identity().then(account => {
@@ -75,7 +82,35 @@ export class HomeComponent implements OnInit {
     //
     // }
 
+    addCourse() {
+        const courseToAdd: CourseDto = {
+            courseName: this.classeNametoAdd,
+            courseLocation: this.classeLocationtoAdd,
+            courseContent: this.classeContenttoAdd,
+            teacherId: this.classeTeacherIdtoAdd
+        };
+        this.courseService.add(courseToAdd).subscribe(() => this.getAllCourses());
+    }
+
+    updateCourse() {
+        const courseToUpdate: CourseDto = {
+            courseName: this.classeNametoUpdate,
+            courseLocation: this.classeLocationtoUpdate,
+            courseContent: this.classeContenttoUpdate,
+            teacherId: this.classeTeacherIdtoUpdate
+        };
+        this.courseService.update(courseToUpdate).subscribe(() => this.getAllCourses());
+    }
+
+    deleteCourse() {
+        this.courseService.delete(this.classeNametoDelete).subscribe(() => this.getAllCourses());
+    }
+
     clearAllCourses() {
         this.courses = [];
+    }
+
+    clearAllCourseswithTN() {
+        this.coursesWithTN = [];
     }
 }
